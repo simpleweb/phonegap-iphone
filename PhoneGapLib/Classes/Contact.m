@@ -352,7 +352,7 @@ static NSDictionary*	com_phonegap_contacts_defaultFields = nil;
 						NSURL* photoUrl = [NSURL URLWithString:value];
 						// caller is responsible for checking for a connection, if no connection this will fail
 						NSError* err = nil;
-						NSData* data = [NSData dataWithContentsOfURL:photoUrl options: NSDataReadingUncached error:&err];
+						NSData* data = [NSData dataWithContentsOfURL:photoUrl options: NSUncachedRead error:&err];
 						if(data && [data length] > 0){
 							bSuccess = ABPersonSetImageData(person, (CFDataRef)data, &error);
 						}
