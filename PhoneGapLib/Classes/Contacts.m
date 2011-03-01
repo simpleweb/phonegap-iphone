@@ -423,17 +423,13 @@ static ABAddressBookRef staticAddrBook = nil;
 - (void) saveAddressBook:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
 {
 	if (staticAddrBook != nil) {
-	    bool bIsError = FALSE, bSuccess = FALSE;
+	    bool bSuccess = FALSE;
         CFErrorRef error;
         ABAddressBookRef addrBook = staticAddrBook;
-        NSLog(@"Saving address book");
         bSuccess = ABAddressBookSave(addrBook, &error);
         if (bSuccess) {
-        	NSLog(@"Address book saved successfully");
     	    CFRelease(addrBook);
 	        staticAddrBook = nil;
-        } else {
-        	NSLog(@"Could not save address book");
         }
     }
 }
@@ -464,10 +460,8 @@ static ABAddressBookRef staticAddrBook = nil;
 
 		ABAddressBookRef addrBook;
         if (staticAddrBook != nil) {
-        	NSLog(@"Using static address book");
 			addrBook = staticAddrBook;
         } else {
-        	NSLog(@"Creating address book");
             addrBook = staticAddrBook = ABAddressBookCreate();
         }
 
@@ -494,7 +488,6 @@ static ABAddressBookRef staticAddrBook = nil;
 				bSuccess = ABAddressBookAddRecord(addrBook, [aContact record], &error);
 			}
 			if (bSuccess && bSaveAddressBook != 0) {
-            	NSLog(@"Saving address book! %d",bSaveAddressBook);
 				bSuccess = ABAddressBookSave(addrBook, &error);	// this is slow
 			}
 			if (!bSuccess){  // need to provide error codes
