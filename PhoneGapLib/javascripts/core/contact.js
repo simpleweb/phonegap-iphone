@@ -184,7 +184,9 @@ Contact.prototype.clone = function() {
 * @param successCB success callback
 * @param errorCB error callback - optional
 */
-Contact.prototype.save = function(successCB, errorCB) {
+Contact.prototype.save = function(saveAddressBook, successCB, errorCB) {
+	log("saveAddressBook is "+saveAddressBook);
+	log("(saveAddressBook == true) is "+(saveAddressBook == true));
 	var bErrCallback = (errorCB == undefined || errorCB == null) ? false : true;
 	navigator.service.contacts.errorCallback = null;
 	if (bErrCallback == true){
@@ -195,7 +197,7 @@ Contact.prototype.save = function(successCB, errorCB) {
 	// don't modify the original contact
 	var cloned = PhoneGap.clone(this);
 	cloned.convertDatesOut(); 
-	PhoneGap.exec("Contacts.save", GetFunctionName(successCB),  {"contact": cloned});
+	PhoneGap.exec("Contacts.save", GetFunctionName(successCB),  {"contact": cloned, "saveAddressBook": (saveAddressBook == true)});
 };
 
 /**

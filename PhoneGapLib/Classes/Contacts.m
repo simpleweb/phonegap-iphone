@@ -426,6 +426,7 @@
 	NSString* jsString = nil;
 	bool bIsError = FALSE, bSuccess = FALSE;
 	BOOL bUpdate = NO;
+    BOOL bSaveAddressBook = NO;
 	ContactError errCode = UNKNOWN_ERROR;
 	CFErrorRef error;
 	//args:
@@ -459,12 +460,15 @@
 		}
 		
 		bSuccess = [aContact setFromContactDict: contactDict asUpdate: bUpdate];
+        bSaveAddressBook = (BOOL)[[options valueForKey:@"saveAddressBook"] intValue];
+        
 		if (bSuccess){
 			if (!bUpdate){
 				bSuccess = ABAddressBookAddRecord(addrBook, [aContact record], &error);
 			}
-			if (bSuccess) {
-				bSuccess = ABAddressBookSave(addrBook, &error);
+			if (bSuccess && bSaveAddressBook != 0) {
+            	NSLog(@"Saving address book! %d",bSaveAddressBook);
+				bSuccess = ABAddressBookSave(addrBook, &error);	// this is slow
 			}
 			if (!bSuccess){  // need to provide error codes
 				bIsError = TRUE;
