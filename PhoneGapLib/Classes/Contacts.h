@@ -77,6 +77,14 @@
  *  
  */
 - (void) save:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+/* 
+ * saveAddressBook - saves an address book that was previously used to add contacts through the save method
+ *
+ * arguments:
+ *  1: success callback - this is the javascript function that will be called with the JSON representation of the saved contact
+ *  
+ */
+- (void) saveAddressBook:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 /*
  * remove - removes a contact from the address book
  * 

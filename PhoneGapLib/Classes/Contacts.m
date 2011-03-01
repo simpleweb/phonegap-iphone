@@ -35,7 +35,7 @@
 
 @end
 
-
+static ABAddressBookRef staticAddrBook = nil;
 @implementation Contacts
 
 // no longer used since code gets AddressBook for each operation. 
@@ -420,6 +420,24 @@
 	
 	
 }
+- (void) saveAddressBook:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+{
+	if (staticAddrBook != nil) {
+	    bool bIsError = FALSE, bSuccess = FALSE;
+        CFErrorRef error;
+        ABAddressBookRef addrBook = staticAddrBook;
+        NSLog(@"Saving address book");
+        bSuccess = ABAddressBookSave(addrBook, &error);
+        if (bSuccess) {
+        	NSLog(@"Address book saved successfully");
+    	    CFRelease(addrBook);
+	        staticAddrBook = nil;
+        } else {
+        	NSLog(@"Could not save address book");
+        }
+    }
+}
+
 - (void) save:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
 {
 	NSUInteger argc = [arguments count];
@@ -443,8 +461,17 @@
 	if (!bIsError){
 	
 		NSMutableDictionary* contactDict = [options valueForKey:@"contact"];
-		
-		ABAddressBookRef addrBook = ABAddressBookCreate();	
+
+		ABAddressBookRef addrBook;
+        if (staticAddrBook != nil) {
+        	NSLog(@"Using static address book");
+			addrBook = staticAddrBook;
+        } else {
+        	NSLog(@"Creating address book");
+            addrBook = staticAddrBook = ABAddressBookCreate();
+        }
+
+//		ABAddressBookRef addrBook = ABAddressBookCreate();	
 		NSNumber* cId = [contactDict valueForKey:kW3ContactId];
 		Contact* aContact = nil; 
 		ABRecordRef rec = nil;
@@ -487,7 +514,7 @@
 			errCode = IO_ERROR; 
 		}
 		[aContact release];	
-		CFRelease(addrBook);
+		//CFRelease(addrBook);
 	} // end of if !bIsError for argument check
 	
 	if (bIsError){
